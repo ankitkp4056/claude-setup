@@ -1,0 +1,45 @@
+# Plan Creation Stage
+
+Based on our full exchange, produce a markdown plan document.
+
+Requirements for the plan:
+
+- Include clear, minimal, concise steps.
+- Track the status of each step using these emojis:
+  - 🟩 Done
+  - 🟨 In Progress
+  - 🟥 To Do
+- Include dynamic tracking of overall progress percentage (at top).
+- Do NOT add extra scope or unnecessary complexity beyond explicitly clarified details.
+- Steps should be modular, elegant, minimal, and integrate seamlessly within the existing codebase.
+
+Markdown Template:
+
+# Feature Implementation Plan
+
+**Overall Progress:** `0%`
+
+## TLDR
+Short summary of what we're building and why.
+
+## Exploration Summary
+Key findings from the exploration stage — relevant files, dependencies, integration points, edge cases, and risks. This section ensures exploration context is preserved for the execute stage.
+
+## Critical Decisions
+Key architectural/implementation choices made during exploration:
+- Decision 1: [choice] - [brief rationale]
+- Decision 2: [choice] - [brief rationale]
+
+## Tasks:
+
+- [ ] 🟥 **Step 1: [Name]**
+  - [ ] 🟥 Subtask 1
+  - [ ] 🟥 Subtask 2
+
+- [ ] 🟥 **Step 2: [Name]**
+  - [ ] 🟥 Subtask 1
+  - [ ] 🟥 Subtask 2
+
+...
+
+Again, it's still not time to build yet. Just write the clear plan document. No extra complexity or extra scope beyond what we discussed.
