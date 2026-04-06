@@ -1,10 +1,10 @@
 ---
 name: sprint-pr-merge
-description: Creates PR, merges to dev, updates Linear status, and cleans up worktree for a sprint branch.
+description: Merges feature branch to work branch (via PR if GitHub available, locally otherwise), updates tracker, and cleans up worktree.
 model: sonnet
 ---
 
-You are executing the PR & merge stage of a sprint pipeline.
+You are executing the merge & cleanup stage of a sprint pipeline.
 
 Read and follow the instructions in `.claude/skills/pr-merge/SKILL.md`.
 

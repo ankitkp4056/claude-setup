@@ -2,31 +2,33 @@
 
 A production-ready Claude Code configuration with custom skills, agents, and a structured development workflow. Drop the `.claude/` folder into any project to get an opinionated, end-to-end development pipeline powered by Claude.
 
+Works fully locally with zero configuration. Optionally integrates with GitHub and Linear when tokens are available.
+
 ## What's Inside
 
 ```
 .claude/
   CLAUDE.md                          # Main project instructions (customize this)
-  .env                               # Token placeholders for GitHub & Linear
+  .env                               # Branch config + optional tokens
   agents/                            # Specialized sub-agents for sprint pipeline
     sprint-document.md               # Updates CHANGELOG after implementation
     sprint-execute.md                # Implements code from a tracking plan
     sprint-explore.md                # Explores codebase before planning
     sprint-frontend-review.md        # Reviews UI/UX quality of frontend changes
     sprint-plan.md                   # Creates implementation plans
-    sprint-pr-merge.md               # Creates PR, merges, updates tracker
+    sprint-pr-merge.md               # Merges branch, updates tracker, cleans up
     sprint-review.md                 # Comprehensive code review
   skills/                            # Slash commands (/skill-name)
-    create-issue/SKILL.md            # Quick issue capture mid-development
+    create-issue/SKILL.md            # Quick issue capture (requires Linear)
     create-plan/SKILL.md             # Generate a tracking doc from exploration
-    deploy/SKILL.md                  # Promote dev to main + update tracker
+    deploy/SKILL.md                  # Sync to GitHub + promote to target branch
     document/SKILL.md                # Update CHANGELOG and verify docs
     execute/SKILL.md                 # Implement from a tracking plan
     explore/SKILL.md                 # Understand scope before building
-    linear-status/SKILL.md           # Quick Linear status overview
+    linear-status/SKILL.md           # Quick Linear status overview (requires Linear)
     linear-status/fetch-status.js    # Pre-fetch script for Linear data
     peer-review/SKILL.md             # Critically evaluate external review findings
-    pr-merge/SKILL.md                # PR creation, merge, tracker update, cleanup
+    pr-merge/SKILL.md                # Branch merge, tracker update, cleanup
     review/SKILL.md                  # Code review with severity levels
     sprint/SKILL.md                  # Full issue lifecycle (with checkpoint)
     sprint-auto/SKILL.md             # Full issue lifecycle (fully autonomous)
@@ -34,18 +36,18 @@ A production-ready Claude Code configuration with custom skills, agents, and a s
 
 ## The Workflow
 
-This setup implements a 9-step development pipeline that takes an issue from backlog to production:
+This setup implements a development pipeline that takes an issue from backlog to production:
 
 ```
 1. /explore          Understand scope, ask questions
 2. /create-plan      Generate a tracking document
-3. Create tickets     Epic + child tickets in your issue tracker
+3. Create tickets     Epic + child tickets (if Linear available)
 4. /execute          Implement the plan (on a feature branch)
 5. /review           Automated code review (CRITICAL/HIGH/MEDIUM/LOW)
 6. /document         Update CHANGELOG
-7. PR + merge        Push to dev via PR
-8. /deploy           Promote dev to main
-9. Update tracker    Mark issues as Done
+7. Merge             Local merge or PR (if GitHub available)
+8. /deploy           Sync to remote + promote to target branch
+9. Update tracker    Mark issues as Done (if Linear available)
 ```
 
 The **`/sprint`** and **`/sprint-auto`** skills run this entire pipeline as a single command, using git worktrees for isolation so you can run multiple sprints in parallel.
@@ -56,6 +58,16 @@ The **`/sprint`** and **`/sprint-auto`** skills run this entire pipeline as a si
 |---|---|---|
 | **Checkpoint** | Pauses after planning for your approval | Fully autonomous, no stops |
 | **Use case** | When you want to review the plan first | When you trust the pipeline end-to-end |
+
+### Sprint Optional Arguments
+
+Both `/sprint` and `/sprint-auto` accept these flags:
+
+| Flag | Effect |
+|------|--------|
+| `--skip-worktree` | Work in current directory instead of creating a worktree |
+| `--keep-artefacts` | Keep tracking/explore docs after completion |
+| `--skip-review` | Skip code review and frontend design review stages |
 
 ## How Agents Work
 
@@ -69,90 +81,105 @@ Each sprint stage is handled by a specialized agent with an optimized model tier
 | `sprint-review` | Opus | Thorough code review |
 | `sprint-frontend-review` | Sonnet | UI/UX design review |
 | `sprint-document` | Sonnet | Documentation updates |
-| `sprint-pr-merge` | Sonnet | PR + merge + cleanup |
+| `sprint-pr-merge` | Sonnet | Branch merge + cleanup |
 
 Agents delegate to skills (the `SKILL.md` files), so all logic lives in one place. The agents are thin wrappers that set model tier and provide sprint context.
 
 ## Setup
 
-### 1. Copy into your project
+### Quick Start (recommended)
 
 ```bash
 cp -r .claude/ /path/to/your-project/.claude/
 ```
 
-### 2. Configure `.claude/.env`
+Then open Claude Code in your project and run:
+
+```
+/project-setup
+```
+
+This walks you through everything interactively — project path, branches, GitHub, Linear, username, issue prefix. No manual file editing needed.
+
+### Manual Setup
+
+If you prefer to configure manually:
+
+**1. Configure `.claude/.env`:**
 
 ```bash
-# .claude/.env
+# Branch configuration (defaults to main if not set)
+WORK_BRANCH=dev
+TARGET_BRANCH=main
+
+# GitHub integration (optional)
 GH_TOKEN=ghp_your_github_token
+
+# Linear integration (optional)
 LINEAR_API_KEY=lin_api_your_linear_key
 LINEAR_TEAM_ID=your-linear-team-uuid
 ```
 
-The `GH_TOKEN` is used for `git push`, `gh pr create`, and `gh pr merge`.
-The Linear keys are used by `/linear-status` and sprint skills.
+**2. Replace placeholders** in skill files (`sprint/SKILL.md`, `sprint-auto/SKILL.md`, `deploy/SKILL.md`, `pr-merge/SKILL.md`):
+- `<PROJECT_ROOT>` → your absolute project path
+- `<your-username>` → your git username
+- `<prefix>` / `<PREFIX>` → your issue prefix (lowercase / UPPERCASE)
 
-### 3. Customize `CLAUDE.md`
+**3. Customize `CLAUDE.md`** — project description, code conventions, issue tracker IDs.
 
-This is the most important file. Open it and replace:
-
-- **Project description** — your project name, tech stack
-- **Branch naming** — your username and issue prefix (e.g., `yourname/proj-123-slug`)
-- **Code conventions** — your project's patterns, file structure, frameworks
-- **Issue tracker IDs** — your Linear/Jira/GitHub status and label IDs
-
-The file has `<!-- CUSTOMIZE -->` comments to guide you.
-
-### 4. Customize skills with `<PROJECT_ROOT>`
-
-Several skills reference `<PROJECT_ROOT>` as a placeholder for your project's absolute path. Search and replace in:
-
-- `skills/deploy/SKILL.md`
-- `skills/pr-merge/SKILL.md`
-- `skills/sprint/SKILL.md`
-- `skills/sprint-auto/SKILL.md`
-
-Also replace `<your-username>`, `<prefix>`, and `<PREFIX>` with your values.
-
-### 5. Create .env and add to `.gitignore`
-
-The `.env` file will keep API Keys and tokens that you want to share with Claude.:
+**4. Add `.env` to `.gitignore`:**
 
 ```
 .claude/.env
 ```
 
-## Branching Strategy
+## Branch Configuration
 
-This setup enforces a 3-tier branching model:
+Branches are configured in `.claude/.env`:
+
+```bash
+WORK_BRANCH=dev        # Where feature branches merge into
+TARGET_BRANCH=main     # Production branch (promoted to via /deploy)
+```
+
+**Single-branch workflow** (default): Both default to `main`. Feature branches merge directly to `main`. `/deploy --promote` is a no-op.
+
+**Two-branch workflow**: Set `WORK_BRANCH=dev` and `TARGET_BRANCH=main`. Feature branches merge to `dev`, then `/deploy --promote` merges `dev` into `main`.
 
 ```
-feature-branch  -->  dev  -->  main
-   (work)          (test)    (production)
+feature-branch  →  WORK_BRANCH  →  TARGET_BRANCH
+   (work)           (test)          (production)
 ```
 
-- Feature branches are created from `dev`
-- PRs always target `dev`, never `main`
-- `dev` is promoted to `main` via merge commit (never squash)
-- After promotion, `dev` is synced back: `git merge main`
+## Cloud Integrations
+
+All integrations are optional. The pipeline works fully locally without any tokens.
+
+| Token | What it enables | Required by |
+|-------|----------------|-------------|
+| `GH_TOKEN` | Push, PRs, remote sync | `/deploy --sync`, PR-based merges |
+| `LINEAR_API_KEY` | Issue tracking | `/linear-status`, `/create-issue` |
+| `LINEAR_TEAM_ID` | Team context for Linear | `/linear-status` |
+
+**Without tokens:** Commits and merges happen locally. Sprint skills ask the user for issue details instead of fetching from Linear. Push/PR steps are skipped.
 
 ## Standalone Skills
 
 These skills work independently outside the sprint pipeline:
 
-| Skill | What it does |
-|-------|-------------|
-| `/explore` | Understand a feature before building it |
-| `/create-plan` | Generate a tracking doc with tasks and progress |
-| `/execute` | Implement from a tracking doc |
-| `/review` | Code review with severity levels |
-| `/document` | Update CHANGELOG after changes |
-| `/deploy` | Promote dev to main |
-| `/pr-merge` | Create PR, merge, update tracker, cleanup |
-| `/create-issue` | Quick issue capture while you're mid-flow |
-| `/peer-review` | Evaluate findings from another AI model's review |
-| `/linear-status` | Quick overview of pending Linear work |
+| Skill | What it does | Requires tokens? |
+|-------|-------------|-----------------|
+| `/project-setup` | Interactive configuration wizard | No |
+| `/explore` | Understand a feature before building it | No |
+| `/create-plan` | Generate a tracking doc with tasks and progress | No |
+| `/execute` | Implement from a tracking doc | No |
+| `/review` | Code review with severity levels | No |
+| `/document` | Update CHANGELOG after changes | No |
+| `/peer-review` | Evaluate findings from another AI model's review | No |
+| `/pr-merge` | Merge branch, update tracker, cleanup | No (enhanced with GH_TOKEN) |
+| `/deploy` | Sync to GitHub + promote to target branch | `--sync` needs GH_TOKEN |
+| `/create-issue` | Quick issue capture while you're mid-flow | Yes (LINEAR_API_KEY) |
+| `/linear-status` | Quick overview of pending Linear work | Yes (LINEAR_API_KEY) |
 
 ## Adapting for Your Stack
 

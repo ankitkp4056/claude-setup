@@ -1,37 +1,33 @@
 # Update Documentation Task
 
-You are updating documentation after code changes.
+You are updating documentation after code changes. Prioritize speed — use existing artefacts, not code files.
 
 ## 1. Identify Changes
-- Check git diff or recent commits for modified files
-- Identify which features/modules were changed
-- Note any new files, deleted files, or renamed files
 
-## 2. Verify Current Implementation
-**CRITICAL**: DO NOT trust existing documentation. Read the actual code.
+Use these sources (do NOT read code files):
+- **Tracking doc** (`docs/TRACKING_*.md`) — lists all tasks and what was implemented
+- **Explore doc** (`docs/EXPLORE_*.md`) — scope summary, dependencies, integration points
+- **Git diff summary** — `git diff --stat` for a quick overview of changed files
+- **Issue description** — provided in your prompt
 
-For each changed file:
-- Read the current implementation
-- Understand actual behavior (not documented behavior)
-- Note any discrepancies with existing docs
+These artefacts contain everything you need. Do not read individual source files.
 
-## 3. Update Relevant Documentation
+## 2. Update CHANGELOG.md
 
-- **CHANGELOG.md**: Add entry under "Unreleased" section
-  - Use categories: Added, Changed, Fixed, Security, Removed
-  - Be concise, user-facing language
+Add entry under "Unreleased" section:
+- Use categories: Added, Changed, Fixed, Security, Removed
+- Be concise, user-facing language
+- Base entries on the tracking doc tasks (they describe what was built)
 
-## 4. Documentation Style Rules
+## 3. Documentation Style Rules
 
-✅ **Concise** - Sacrifice grammar for brevity
-✅ **Practical** - Examples over theory
-✅ **Accurate** - Code verified, not assumed
-✅ **Current** - Matches actual implementation
+- Concise — sacrifice grammar for brevity
+- Practical — examples over theory
+- Accurate — based on tracking doc and explore doc, not assumptions
+- Current — matches what was actually implemented per the tracking doc
 
-❌ No enterprise fluff
-❌ No outdated information
-❌ No assumptions without verification
+No enterprise fluff. No outdated information. No assumptions without verification.
 
-## 5. Ask if Uncertain
+## 4. Ask if Uncertain
 
-If you're unsure about intent behind a change or user-facing impact, **ask the user** - don't guess.
+If you're unsure about intent behind a change or user-facing impact, **ask the user** — don't guess.

@@ -8,11 +8,11 @@ You are executing the review stage of a sprint pipeline.
 
 Read and follow the instructions in `.claude/skills/review/SKILL.md`.
 
-Sprint-specific context (worktree path, changed files) will be provided in your prompt.
+Sprint-specific context (working directory path, changed files) will be provided in your prompt.
 
 **Important:** Read these docs before reviewing code — they provide the full context of what was planned and why:
-- Explore doc: `docs/EXPLORE_MYT-<N>.md` — exploration findings, dependencies, edge cases
-- Tracking doc: `docs/TRACKING_MYT-<N>.md` — planned tasks, critical decisions, exploration summary
+- Explore doc (path provided in prompt) — exploration findings, dependencies, edge cases
+- Tracking doc (path provided in prompt) — planned tasks, critical decisions, exploration summary
 
 Use them to verify that the implementation matches the plan and that identified edge cases/risks were addressed.
 

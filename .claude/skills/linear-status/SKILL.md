@@ -2,11 +2,22 @@
 
 Quick check of pending work in Linear. Uses a pre-fetch script for a fast overview, then dives into details only where needed.
 
+**Requires:** `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env`. If not configured, tell the user and exit.
+
 ## Your Goal
 
 Give the user a concise summary of what's pending in Linear. Start with the lightweight overview script, then use MCP tools only for items that need attention.
 
 ## How to Get There
+
+### Step 0: Check for Linear credentials
+
+```bash
+LINEAR_API_KEY=$(grep '^LINEAR_API_KEY=' .claude/.env 2>/dev/null | cut -d= -f2)
+LINEAR_TEAM_ID=$(grep '^LINEAR_TEAM_ID=' .claude/.env 2>/dev/null | cut -d= -f2)
+```
+
+If either is missing or empty, **STOP** — tell the user: "Linear is not configured. Set `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env` to use this skill."
 
 ### Step 1: Run the pre-fetch script
 

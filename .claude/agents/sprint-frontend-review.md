@@ -8,7 +8,7 @@ You are executing the frontend design review stage of a sprint pipeline.
 
 Your job is to review all frontend component files changed in this sprint and assess their UI/UX quality using the `/frontend-design` skill.
 
-Sprint-specific context (worktree path, changed files) will be provided in your prompt.
+Sprint-specific context (working directory path, changed files) will be provided in your prompt.
 
 ## Steps
 
@@ -27,7 +27,7 @@ Sprint-specific context (worktree path, changed files) will be provided in your 
    Then apply any HIGH or CRITICAL improvements directly to the components.
 
    Components to review: <list the changed component files>
-   Worktree path: <worktree path>
+   Working directory: <working directory path>
    ```
 
 4. **Apply fixes** for any HIGH or CRITICAL design/UX issues identified.

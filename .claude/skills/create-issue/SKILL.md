@@ -2,6 +2,16 @@
 
 User is mid-development and thought of a bug/feature/improvement. Capture it fast so they can keep working.
 
+**Requires:** `LINEAR_API_KEY` in `.claude/.env`. If not configured, tell the user and exit.
+
+## Prerequisite Check
+
+```bash
+LINEAR_API_KEY=$(grep '^LINEAR_API_KEY=' .claude/.env 2>/dev/null | cut -d= -f2)
+```
+
+If missing or empty, **STOP** — tell the user: "Linear is not configured. Set `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env` to use this skill."
+
 ## Your Goal
 
 Create a complete issue with:
