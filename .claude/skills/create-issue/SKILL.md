@@ -2,7 +2,7 @@
 
 User is mid-development and thought of a bug/feature/improvement. Capture it fast so they can keep working.
 
-**Requires:** `LINEAR_API_KEY` in `.claude/.env`. If not configured, tell the user and exit.
+**Requires:** `LINEAR_API_KEY` in `.claude/.env`. If not configured, tell the <your-username> and exit.
 
 ## Prerequisite Check
 
@@ -10,7 +10,7 @@ User is mid-development and thought of a bug/feature/improvement. Capture it fas
 LINEAR_API_KEY=$(grep '^LINEAR_API_KEY=' .claude/.env 2>/dev/null | cut -d= -f2)
 ```
 
-If missing or empty, **STOP** — tell the user: "Linear is not configured. Set `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env` to use this skill."
+If missing or empty, **STOP** — tell the <your-username>: "Linear is not configured. Set `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env` to use this skill."
 
 ## Your Goal
 
@@ -24,7 +24,7 @@ Create a complete issue with:
 
 ## How to Get There
 
-**Ask questions** to fill gaps - be concise, respect the user's time. They're mid-flow and want to capture this quickly. Usually need:
+**Ask questions** to fill gaps - be concise, respect the <your-username>'s time. They're mid-flow and want to capture this quickly. Usually need:
 - What's the issue/feature
 - Current behavior vs desired behavior
 - Type (bug/feature/improvement) and priority if not obvious

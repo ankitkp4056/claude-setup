@@ -35,28 +35,74 @@ If everything is already configured, say so and ask if they want to reconfigure 
 
 ## Stage 2: Understand the User's Workflow
 
-Ask these questions **one message at a time**, grouped logically. Don't dump all questions at once.
+Ask these questions **one group at a time**, grouped logically. Don't dump all questions at once.
 
 **Group 1 — Project basics:**
-> 1. What's the absolute path to your project root? (I need this so skills can reference it — e.g., `/home/you/projects/my-app`)
-> 2. Brief project description and tech stack? (e.g., "Task manager — React + Express + PostgreSQL")
+> 1. Detect current directory with `pwd` and confirm with user: "I've detected your project root as `<path>`. Is this correct, or would you like to use a different directory?"
+>    - If confirmed, use that path
+>    - If different, ask for the absolute path
+> 2. Brief project description? (e.g., "Task manager app", "Personal blog"). Optional — the user can skip this and fill it in later.
 
-**Group 2 — Git & branching:**
-> 3. What's your GitHub username? (used for branch naming like `username/feat-1-slug`)
-> 4. What prefix do you use for issues/tickets? (e.g., `proj` → branches become `username/proj-1-slug`, docs become `EXPLORE_PROJ-1.md`). If you don't use a tracker, pick a short project abbreviation.
-> 5. How do you want to manage branches?
->    - **Single branch** — everything on `main` (simplest, good for solo/local projects)
->    - **Two branches** — feature branches merge to a work branch (e.g., `dev`), then promote to production (e.g., `main`)
->    - *(If two branches)* What are your branch names? (default: `dev` → `main`)
+**Group 2 — Workflow mode (the central question):**
 
-**Group 3 — Integrations (skip if user already said "fully local"):**
-> 6. Do you use GitHub for this project? If yes, do you have a personal access token (classic, with `repo` scope)? You can paste it here or add it later.
-> 7. Do you use Linear for issue tracking? If yes, do you have your API key and team ID? You can paste them here or add it later.
+Present the three options clearly:
+
+> How do you plan to manage this project?
+>
+> - **A) Fully local — no Git** — Files live on your machine only. No version control, no branches. Planning, execution, and review skills all work. Branch-based workflows (sprint, deploy, pr-merge) are not available.
+> - **B) Local Git — no remote** — Git for version control and branching, but no GitHub remote. Commits, branches, and local merges all work. Push/PR features are skipped.
+> - **C) GitHub — remote repo** — Full workflow: Git + GitHub remote. Enables push, pull requests, remote sync, and deploy/promote.
+
+Then ask **only** the follow-up questions that apply to the chosen mode:
+
+---
+
+**If A (Fully local — no Git):**
+No further questions needed for version control. Skip directly to Group 3 (issue tracking).
+
+---
+
+**If B (Local Git — no remote):**
+
+Detect defaults before asking:
+- **Prefix default:** derive from the project directory name (e.g., `my-app` → `myapp`). Strip hyphens/underscores and lowercase.
+- **Username default:** read from `git config user.name`. If not set, default to none (optional for local).
+- **Branch default:** single branch on `main` (recommended for solo local projects).
+
+Present as a confirmation with defaults pre-filled:
+
+> Here's what I'd recommend for your local Git setup. Press enter to accept or modify any:
+>
+> 1. **Issue prefix:** `<detected-prefix>` — used in branch names (e.g., `<prefix>-1-add-auth`) and doc names (e.g., `EXPLORE_<PREFIX>-1.md`). Change this if you have a tracker with its own prefix.
+> 2. **Branch strategy:** Single branch on `main` *(recommended for solo local)* — or choose two branches (`dev` → `main`) for a staging workflow.
+> 3. **Branch name prefix** *(optional)*: none — branches will be `<prefix>-1-slug`. Add a name (e.g., `yourname`) to get `yourname/<prefix>-1-slug`.
+
+---
+
+**If C (GitHub — remote repo):**
+
+Detect defaults before asking:
+- **Username default:** try `gh api user --jq .login 2>/dev/null`, then fall back to `git config user.name`, then ask.
+- **Prefix default:** derive from the project directory name (same as option B).
+- **Branch default:** two branches, `dev` → `main` (recommended for GitHub workflow).
+
+Present as a confirmation with defaults pre-filled:
+
+> Here's what I'd recommend for your GitHub setup. Press enter to accept or modify any:
+>
+> 1. **GitHub username:** `<detected-username>` — used in branch naming (e.g., `<username>/<prefix>-1-slug`). Important since branches are shared on the remote.
+> 2. **Issue prefix:** `<detected-prefix>` — used in branch names and doc names.
+> 3. **Branch strategy:** Two branches, `dev` → `main` *(recommended for GitHub)* — feature branches merge to `dev`, then promote to `main`. Or choose single branch on `main` if you prefer.
+> 4. **GitHub token:** Do you have a personal access token (classic, with `repo` scope)? Paste it here or type "later" to add it to `.claude/.env` yourself.
+
+---
+
+**Group 3 — Issue tracking (ask for all modes):**
+> Do you use Linear for issue tracking? If yes, do you have your API key and team ID? You can paste them here or add them later.
 
 **Adapt based on answers:**
-- If they say "fully local" or "no GitHub", skip the GitHub token question
-- If they say "no issue tracker", skip the Linear question
 - If they already have values configured (from Stage 1), confirm them rather than re-asking
+- If the user says "I'll add that later" for any token, comment out the line and move on
 - Don't ask about build commands yet — the defaults (`ng build`, `node --check`) can be changed later
 
 ## Stage 3: Apply Configuration
@@ -87,9 +133,9 @@ LINEAR_TEAM_ID=<their-id-or-comment-out>
 Search and replace across all skill and agent files:
 
 1. `<PROJECT_ROOT>` → their absolute project path
-2. `<your-username>` → their GitHub/git username
-3. `<prefix>` → their issue prefix (lowercase)
-4. `<PREFIX>` → their issue prefix (UPPERCASE)
+2. `<your-username>` → their git username (or "user" if not using git)
+3. `<prefix>` → their issue prefix (lowercase) (or "task" if not using git)
+4. `<PREFIX>` → their issue prefix (UPPERCASE) (or "TASK" if not using git)
 
 Files to update:
 - `.claude/skills/sprint-auto/SKILL.md`
@@ -106,7 +152,7 @@ Replace the placeholder project description at the top of `.claude/CLAUDE.md`:
 ```markdown
 ## Project
 
-<their project description and tech stack>
+<their project description, or just the project directory name if they skipped>
 ```
 
 Leave the rest of CLAUDE.md unchanged — it's already configured by the env file and skill placeholders.
@@ -159,5 +205,6 @@ Then print a summary:
 - Skip questions for things already configured — confirm instead
 - Never store tokens in any file other than `.claude/.env`
 - If the user says "I'll add that later", comment out the line and move on
+- Always default project root to current working directory (pwd), but allow user to override
 - Validate the project root path exists before using it
 - After setup, remind them to add `.claude/.env` to `.gitignore` if it's not already there

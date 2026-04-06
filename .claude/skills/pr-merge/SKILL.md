@@ -35,7 +35,7 @@ Takes an issue number (e.g., `PREFIX-70`) or branch name as input.
    cd /tmp/<prefix>-<N>-worktree
    git status --porcelain
    ```
-   If there are uncommitted changes, **STOP** — tell the user the branch has in-progress work.
+   If there are uncommitted changes, **STOP** — tell the <your-username> the branch has in-progress work.
 
 ## Stage 2: Merge to Work Branch
 
@@ -61,7 +61,7 @@ Takes an issue number (e.g., `PREFIX-70`) or branch name as input.
    ```
 5. If merge fails due to conflicts:
    - Report the conflicting files
-   - **STOP** — tell the user to resolve conflicts manually
+   - **STOP** — tell the <your-username> to resolve conflicts manually
 6. Sync work branch locally:
    ```bash
    cd <PROJECT_ROOT>
@@ -79,7 +79,7 @@ Takes an issue number (e.g., `PREFIX-70`) or branch name as input.
    ```
 2. If merge fails due to conflicts:
    - Report the conflicting files
-   - **STOP** — tell the user to resolve conflicts manually
+   - **STOP** — tell the <your-username> to resolve conflicts manually
 
 ## Stage 3: Update Issue Tracker (if LINEAR_API_KEY available)
 
@@ -113,7 +113,7 @@ Feature branch merged to work branch means the issue is now being tested — mov
    ```
 5. Delete the tracking doc and explore doc:
    ```bash
-   rm -f docs/TRACKING_<PREFIX>-<N>.md docs/EXPLORE_<PREFIX>-<N>.md
+   rm -f docs/TRACKING_TASK-<N>.md docs/EXPLORE_TASK-<N>.md
    git add docs/ && git commit -m "chore: remove tracking and explore docs for <PREFIX>-<N>" 2>/dev/null || true
    ```
 6. If GH_TOKEN is available, push the cleanup:

@@ -35,12 +35,12 @@ This skill orchestrates sprint agents. Each stage is delegated to a specialized 
 
 **If LINEAR_API_KEY is available:**
 1. Fetch issues that are in **Todo** or **Backlog** status from your issue tracker.
-2. Present the list to the user and ask which issue to pick (or auto-pick the highest priority one if user said "auto")
+2. Present the list to the <your-username> and ask which issue to pick (or auto-pick the highest priority one if <your-username> said "auto")
 3. Read the full issue description to understand scope
 4. Move the issue to **In Progress**
 
 **If no LINEAR_API_KEY:**
-1. Ask the user to describe the issue (title + description)
+1. Ask the <your-username> to describe the issue (title + description)
 2. Ask for an issue identifier to use for branch naming (e.g., "feat-1", "fix-auth")
 
 ## Stage 2: Git Setup
@@ -93,7 +93,7 @@ Launch the **sprint-explore** agent (haiku) using the Agent tool:
   - The full issue description
   - Path to relevant module doc (if referenced in the issue)
   - The working directory path so it can read existing code
-  - The explore doc path: `<working-dir>/docs/EXPLORE_<PREFIX>-<issue-number>.md` — the agent must write its findings here
+  - The explore doc path: `<working-dir>/docs/EXPLORE_TASK-<issue-number>.md` — the agent must write its findings here
 - The agent will write an explore doc to disk and return a scope summary
 
 Proceed directly to planning — no checkpoint.
@@ -104,22 +104,22 @@ Proceed directly to planning — no checkpoint.
    - `subagent_type: "sprint-plan"`
    - In the prompt, provide:
      - The issue description
-     - The explore doc path: `<working-dir>/docs/EXPLORE_<PREFIX>-<issue-number>.md`
-     - The tracking doc path: `<working-dir>/docs/TRACKING_<PREFIX>-<issue-number>.md`
+     - The explore doc path: `<working-dir>/docs/EXPLORE_TASK-<issue-number>.md`
+     - The tracking doc path: `<working-dir>/docs/TRACKING_TASK-<issue-number>.md`
      - The working directory path
    - The agent will read the explore doc and produce the tracking document
-2. **CHECKPOINT — Present the plan to the user and wait for approval before continuing.**
+2. **CHECKPOINT — Present the plan to the <your-username> and wait for approval before continuing.**
    - Show the plan summary
    - Ask: "Plan ready. Proceed with implementation?"
-   - If user says no or requests changes, revise the plan and ask again
-   - Do NOT proceed to Stage 5 until user confirms
+   - If <your-username> says no or requests changes, revise the plan and ask again
+   - Do NOT proceed to Stage 5 until <your-username> confirms
 
 ## Stage 5: Execute
 
 Launch the **sprint-execute** agent (sonnet) using the Agent tool:
 - `subagent_type: "sprint-execute"`
 - In the prompt, provide:
-  - The tracking doc path: `docs/TRACKING_<PREFIX>-<issue-number>.md`
+  - The tracking doc path: `docs/TRACKING_TASK-<issue-number>.md`
   - The working directory path
   - The issue description for context
 
@@ -151,8 +151,8 @@ Verify both frontend and backend compile without errors before review.
      - The working directory path
      - A summary of what was implemented
      - List of changed files (from `git diff --name-only $WORK_BRANCH`)
-     - The explore doc path: `<working-dir>/docs/EXPLORE_<PREFIX>-<issue-number>.md`
-     - The tracking doc path: `<working-dir>/docs/TRACKING_<PREFIX>-<issue-number>.md`
+     - The explore doc path: `<working-dir>/docs/EXPLORE_TASK-<issue-number>.md`
+     - The tracking doc path: `<working-dir>/docs/TRACKING_TASK-<issue-number>.md`
 2. Auto-fix any CRITICAL or HIGH issues found, then re-run build check if fixes were applied
 
 Proceed directly to frontend design review — no checkpoint.
@@ -179,8 +179,8 @@ Proceed directly to document & merge — no checkpoint.
    - In the prompt, provide:
      - The working directory path
      - The issue title and description
-     - The explore doc path: `<working-dir>/docs/EXPLORE_<PREFIX>-<issue-number>.md`
-     - The tracking doc path: `<working-dir>/docs/TRACKING_<PREFIX>-<issue-number>.md`
+     - The explore doc path: `<working-dir>/docs/EXPLORE_TASK-<issue-number>.md`
+     - The tracking doc path: `<working-dir>/docs/TRACKING_TASK-<issue-number>.md`
    - The agent should use the explore/tracking docs to understand changes — not read source files
 2. Commit all changes:
    ```
@@ -219,7 +219,7 @@ Proceed directly to document & merge — no checkpoint.
 
 1. Delete the tracking doc and explore doc:
    ```bash
-   rm -f docs/TRACKING_<PREFIX>-<N>.md docs/EXPLORE_<PREFIX>-<N>.md
+   rm -f docs/TRACKING_TASK-<N>.md docs/EXPLORE_TASK-<N>.md
    git add docs/ && git commit -m "chore: remove tracking and explore docs for <PREFIX>-<N>" 2>/dev/null || true
    ```
 2. If GH_TOKEN is available, push the cleanup commit:
@@ -232,7 +232,7 @@ Report final status: "<PREFIX>-<N> merged to $WORK_BRANCH."
 ## Rules
 
 - Read branch and token config from `<PROJECT_ROOT>/.claude/.env` (absolute path — `.claude/` doesn't exist in worktrees)
-- Never proceed past a checkpoint without explicit user approval
+- Never proceed past a checkpoint without explicit <your-username> approval
 - If any stage fails, stop and report the error — do not retry blindly
 - Keep the tracking doc updated throughout execution
 - Do NOT reimplement logic from agents — launch them and let them do their job

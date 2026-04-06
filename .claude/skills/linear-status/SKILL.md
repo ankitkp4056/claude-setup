@@ -2,11 +2,11 @@
 
 Quick check of pending work in Linear. Uses a pre-fetch script for a fast overview, then dives into details only where needed.
 
-**Requires:** `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env`. If not configured, tell the user and exit.
+**Requires:** `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env`. If not configured, tell the <your-username> and exit.
 
 ## Your Goal
 
-Give the user a concise summary of what's pending in Linear. Start with the lightweight overview script, then use MCP tools only for items that need attention.
+Give the <your-username> a concise summary of what's pending in Linear. Start with the lightweight overview script, then use MCP tools only for items that need attention.
 
 ## How to Get There
 
@@ -17,7 +17,7 @@ LINEAR_API_KEY=$(grep '^LINEAR_API_KEY=' .claude/.env 2>/dev/null | cut -d= -f2)
 LINEAR_TEAM_ID=$(grep '^LINEAR_TEAM_ID=' .claude/.env 2>/dev/null | cut -d= -f2)
 ```
 
-If either is missing or empty, **STOP** — tell the user: "Linear is not configured. Set `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env` to use this skill."
+If either is missing or empty, **STOP** — tell the <your-username>: "Linear is not configured. Set `LINEAR_API_KEY` and `LINEAR_TEAM_ID` in `.claude/.env` to use this skill."
 
 ### Step 1: Run the pre-fetch script
 
@@ -47,7 +47,7 @@ End with: "X open issues across Y active projects"
 ### Step 3: Dive deeper only if needed
 
 Use MCP tools (`mcp__linear-server__get_issue`, `mcp__linear-server__list_comments`) ONLY when:
-- The user asks about a specific issue
+- The <your-username> asks about a specific issue
 - You need to check comments or activity on a stale issue
 - You need details not in the overview (description, labels, relations)
 

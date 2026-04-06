@@ -1,6 +1,6 @@
 # Initial Exploration Stage
 
-Your task is NOT to implement this yet, but to fully understand and prepare.
+Your <prefix> is NOT to implement this yet, but to fully understand and prepare.
 
 Your responsibilities:
 

@@ -26,7 +26,7 @@ If no arguments are provided, show a status summary of what would happen with ea
    GH_TOKEN=$(grep '^GH_TOKEN=' <PROJECT_ROOT>/.claude/.env 2>/dev/null | cut -d= -f2)
    LINEAR_API_KEY=$(grep '^LINEAR_API_KEY=' <PROJECT_ROOT>/.claude/.env 2>/dev/null | cut -d= -f2)
    ```
-2. If `--sync` is requested but `GH_TOKEN` is not set, **STOP** — tell the user to configure `GH_TOKEN` in `.claude/.env`.
+2. If `--sync` is requested but `GH_TOKEN` is not set, **STOP** — tell the <your-username> to configure `GH_TOKEN` in `.claude/.env`.
 3. If `--promote` is requested and `WORK_BRANCH` == `TARGET_BRANCH`, **STOP** — nothing to promote (single-branch workflow).
 
 ## Stage 1: Pre-flight Checks
@@ -44,7 +44,7 @@ If no arguments are provided, show a status summary of what would happen with ea
    ```bash
    git status --porcelain
    ```
-   If dirty, **STOP** — tell the user to commit or stash changes first.
+   If dirty, **STOP** — tell the <your-username> to commit or stash changes first.
 
 ## Stage 2: Status (no flags)
 
@@ -97,7 +97,7 @@ If no arguments are provided, show a status summary of what would happen with ea
    GH_TOKEN=$(grep '^GH_TOKEN=' <PROJECT_ROOT>/.claude/.env | cut -d= -f2) \
      gh pr list --base $TARGET_BRANCH --head $WORK_BRANCH --state open
    ```
-   If one exists, **STOP** — tell the user there's already an open promotion PR.
+   If one exists, **STOP** — tell the <your-username> there's already an open promotion PR.
 
    ```bash
    GH_TOKEN=$(grep '^GH_TOKEN=' <PROJECT_ROOT>/.claude/.env | cut -d= -f2) \

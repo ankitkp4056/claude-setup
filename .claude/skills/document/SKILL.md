@@ -16,7 +16,7 @@ These artefacts contain everything you need. Do not read individual source files
 
 Add entry under "Unreleased" section:
 - Use categories: Added, Changed, Fixed, Security, Removed
-- Be concise, user-facing language
+- Be concise, <your-username>-facing language
 - Base entries on the tracking doc tasks (they describe what was built)
 
 ## 3. Documentation Style Rules
@@ -30,4 +30,4 @@ No enterprise fluff. No outdated information. No assumptions without verificatio
 
 ## 4. Ask if Uncertain
 
-If you're unsure about intent behind a change or user-facing impact, **ask the user** — don't guess.
+If you're unsure about intent behind a change or <your-username>-facing impact, **ask the <your-username>** — don't guess.

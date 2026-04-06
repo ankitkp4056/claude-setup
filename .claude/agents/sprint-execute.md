@@ -13,4 +13,4 @@ Sprint-specific context (tracking doc path, worktree path, issue details) will b
 Additional rules:
 - All work happens in the worktree directory specified in your prompt
 - Follow existing code conventions from CLAUDE.md
-- Update the tracking document as you complete each task
+- Update the tracking document as you complete each <prefix>

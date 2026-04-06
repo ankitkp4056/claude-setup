@@ -8,10 +8,9 @@
 
 ## Project
 
-<!-- Describe your project in one line. Include the tech stack. -->
 <!-- Run /project-setup to configure this interactively -->
+<!-- Project root defaults to the current working directory when /project-setup is run -->
 Your Project Name — brief description.
-Frontend framework + Backend framework + Database + other services.
 
 ## Branch Configuration
 
